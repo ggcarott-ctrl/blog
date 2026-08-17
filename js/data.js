@@ -75,6 +75,12 @@ const DEFAULT_ARTICLES = [
 ];
 
 function getArticles() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('reset')) {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(COMMENT_KEY);
+        window.location.replace(window.location.pathname);
+    }
     const data = localStorage.getItem(STORAGE_KEY);
     if (!data) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_ARTICLES));
