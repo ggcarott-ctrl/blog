@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Yoojun Blog</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">Yoojun</a>
+        <div class="nav-links">
+            <a href="index.html">Blog</a>
+            <a href="admin.html">Admin</a>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h2>Kelola Artikel</h2>
+            <button class="btn btn-primary" onclick="openModal()">+ Artikel Baru</button>
+        </div>
+
+        <div class="admin-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Judul</th>
+                        <th>Kategori</th>
+                        <th>Tanggal</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="articleTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h2 id="modalTitle">Artikel Baru</h2>
+            <form id="articleForm">
+                <label for="inputTitle">Judul</label>
+                <input type="text" id="inputTitle" required>
+
+                <label for="inputCategory">Kategori</label>
+                <input type="text" id="inputCategory" placeholder="contoh: Teknologi, Hiburan" required>
+
+                <label for="inputTags">Tag (koma)</label>
+                <input type="text" id="inputTags" placeholder="contoh: javascript, tips, tutorial">
+
+                <label for="inputContent">Konten</label>
+                <textarea id="inputContent" required></textarea>
+
+                <div class="btn-row">
+                    <button type="button" class="btn" onclick="closeModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 Yoojun Blog. Dibuat dengan HTML, CSS, JS.</footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/admin.js"></script>
+    <script>initAdmin();</script>
+</body>
+</html>
