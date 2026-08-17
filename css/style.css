@@ -199,6 +199,132 @@ nav .nav-links a:hover {
     white-space: pre-wrap;
 }
 
+.article-detail .content h2.section-heading {
+    font-size: 1.4rem;
+    margin-top: 2rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.article-detail .content h3 {
+    font-size: 1.15rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.article-detail .content strong {
+    font-weight: 700;
+}
+
+.article-detail .content ol,
+.article-detail .content ul {
+    margin: 0.8rem 0;
+    padding-left: 1.5rem;
+}
+
+.article-detail .content li {
+    margin-bottom: 0.3rem;
+    white-space: normal;
+}
+
+.code-block {
+    margin: 1.2rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #1e293b;
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 1rem;
+    background: #0f172a;
+    font-size: 0.8rem;
+}
+
+.code-lang {
+    color: #94a3b8;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+}
+
+.copy-btn {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.copy-btn:hover {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.code-block pre {
+    margin: 0;
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+.code-block code {
+    color: #e2e8f0;
+    font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+.inline-code {
+    background: #e0e7ff;
+    color: #3730a3;
+    padding: 0.15rem 0.4rem;
+    border-radius: 5px;
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9em;
+}
+
+.toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.toc strong {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-size: 1rem;
+}
+
+.toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc li {
+    margin-bottom: 0.3rem;
+}
+
+.toc a {
+    color: var(--primary);
+    font-size: 0.92rem;
+    transition: color 0.2s;
+}
+
+.toc a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
 /* COMMENTS */
 .comments {
     max-width: 700px;

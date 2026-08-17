@@ -46,6 +46,306 @@ const DEFAULT_ARTICLES = [
         tags: ['setup', 'developer', 'tools'],
         date: '2026-08-13',
         views: 167
+    },
+    {
+        id: 6,
+        title: 'Cara Membuat Bot Telegram di Android Menggunakan Termux dari Nol',
+        content: `## Apa itu Bot Telegram
+
+Bot Telegram adalah program otomatis yang berjalan di platform Telegram. Bot bisa menjawab pesan, mengirim notifikasi, mengelola grup, dan banyak lagi. Telegram menyediakan API gratis yang bisa digunakan oleh siapa saja.
+
+Kelebihan bot Telegram:
+- Gratis dan tidak dibatasi
+- Bisa diakses jutaan pengguna Telegram
+- Mendukung inline keyboard, callback, dan media
+- Bisa dijalankan 24 jam dari server atau VPS
+
+## Membuat Bot melalui BotFather
+
+Langkah pertama adalah membuat bot baru melalui @BotFather di Telegram:
+
+1. Buka Telegram, cari **@BotFather**
+2. Kirim perintah `/newbot`
+3. Beri nama bot (contoh: "Yoojun Bot")
+4. Beri username bot (harus unik dan berakhir dengan "bot", contoh: yoojun_bot)
+5. BotFather akan memberikan **token** bot kamu
+
+Simpan token ini baik-baik! Token ini adalah kunci akses ke bot kamu.
+
+## Mendapatkan Token Bot
+
+Token bot berformat seperti ini:
+
+~~~
+1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
+~~~
+
+Token ini bisa kamu dapatkan kapan saja dari BotFather dengan perintah `/mybots`, lalu pilih bot kamu, dan klik "API Token".
+
+## Cara Menjaga Token Tetap Aman
+
+Token bot sama seperti password. Jangan pernah membaginya ke sembarang orang.
+
+Yang boleh dan tidak boleh dilakukan:
+- Simpan token di file `.env` (tidak di-commit ke Git)
+- Jangan kirim token di chat publik atau grup
+- Jangan simpan token langsung di kode source
+- Jika token bocor, segera revoke dan buat baru dari BotFather
+
+Contoh penyimpanan aman dengan file `.env`:
+
+~~~
+BOT_TOKEN=1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
+~~~
+
+## Instalasi Termux
+
+Termux adalah terminal emulator untuk Android yang bisa menjalankan Linux langsung di HP.
+
+Cara install:
+1. Buka **Google Play Store** atau **F-Droid**
+2. Cari "Termux"
+3. Install **Termux** (oleh Fredrik Fornwall)
+4. Buka Termux
+
+Setelah terbuka, update paket terlebih dahulu:
+
+~~~bash
+pkg update && pkg upgrade
+~~~
+
+Tekan `Y` jika ditanya konfirmasi. Proses ini mungkin memakan waktu beberapa menit.
+
+## Instalasi Python
+
+Python adalah bahasa pemrograman yang akan kita gunakan untuk membuat bot.
+
+~~~bash
+pkg install python
+~~~
+
+Setelah terinstall, cek versinya:
+
+~~~bash
+python --version
+~~~
+
+Pastikan muncul `Python 3.x.x`. Jika sudah, install pip (package manager Python):
+
+~~~bash
+pkg install python-pip
+~~~
+
+## Instalasi Library Telegram
+
+Kita akan menggunakan library `python-telegram-bot` yang memudahkan interaksi dengan Telegram API.
+
+~~~bash
+pip install python-telegram-bot
+~~~
+
+Tunggu hingga proses selesai. Jika muncul error, coba jalankan:
+
+~~~bash
+pip install --upgrade pip
+pip install python-telegram-bot
+~~~
+
+## Membuat Bot Python Sederhana
+
+Buat file baru bernama `bot.py`:
+
+~~~bash
+nano bot.py
+~~~
+
+Lalu paste kode berikut:
+
+~~~python
+import os
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
+
+BOT_TOKEN = "TOKEN_KAMU_DI_SINI"
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Halo! Saya bot Telegram dari Termux!")
+
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(f"Kamu bilang: {update.message.text}")
+
+app = ApplicationBuilder().token(BOT_TOKEN).build()
+app.add_handler(CommandHandler("start", start))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+
+print("Bot sedang berjalan...")
+app.run_polling()
+~~~
+
+Tekan `Ctrl+O` lalu `Enter` untuk save, dan `Ctrl+X` untuk keluar dari nano.
+
+**Penting:** Ganti `TOKEN_KAMU_DI_SINI` dengan token yang kamu dapatkan dari BotFather.
+
+## Command "/start"
+
+Command `/start` adalah command pertama yang dijalankan saat user pertama kali membuka bot.
+
+Fungsi `start` pada kode di atas akan mengirim pesan sambutan: "Halo! Saya bot Telegram dari Termux!"
+
+Kamu bisa kustom pesan sesuai kebutuhan, misalnya:
+
+~~~python
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    await update.message.reply_text(
+        f"Halo {user.first_name}!\\n"
+        f"Selamat datang di bot saya.\\n"
+        f"Ketik /help untuk melihat perintah."
+    )
+~~~
+
+## Membuat Bot Merespons Pesan
+
+Bagian `echo` pada kode di atas adalah handler untuk semua pesan teks yang bukan command.
+
+~~~python
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(f"Kamu bilang: {update.message.text}")
+~~~
+
+Kamu bisa menambahkan logika lebih lanjut, misalnya membalas dengan pesan tertentu:
+
+~~~python
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text.lower()
+
+    if "halo" in text:
+        await update.message.reply_text("Halo juga! Ada yang bisa saya bantu?")
+    elif "jam berapa" in text:
+        from datetime import datetime
+        now = datetime.now().strftime("%H:%M")
+        await update.message.reply_text(f"Sekarang jam {now}")
+    else:
+        await update.message.reply_text(f"Kamu bilang: {update.message.text}")
+~~~
+
+## Menjalankan Bot
+
+Jalankan bot dengan perintah:
+
+~~~bash
+python bot.py
+~~~
+
+Jika berhasil, akan muncul pesan:
+
+~~~
+Bot sedang berjalan...
+~~~
+
+Buka Telegram, cari bot kamu (berdasarkan username), dan kirim `/start`. Bot akan merespons!
+
+Untuk menghentikan bot, tekan `Ctrl+C` di Termux.
+
+## Menjalankan Bot Menggunakan tmux
+
+Masalah menjalankan bot di Termux: ketika kamu minimize Termux atau pindah aplikasi, bot akan mati.
+
+Solusinya: gunakan **tmux** (terminal multiplexer) yang membuat bot tetap berjalan di background.
+
+### Install tmux
+
+~~~bash
+pkg install tmux
+~~~
+
+### Membuat Session Baru
+
+~~~bash
+tmux new -s bot
+~~~
+
+Sekarang kamu berada di session tmux. Jalankan bot seperti biasa:
+
+~~~bash
+python bot.py
+~~~
+
+### Memisahkan dari Session
+
+Tekan `Ctrl+B` lalu lepas, tekan `D`.
+
+Bot tetap berjalan di background! Kamu bisa keluar dari Termux tanpa bot mati.
+
+### Kembali ke Session
+
+Untuk melihat bot lagi:
+
+~~~bash
+tmux attach -t bot
+~~~
+
+### Menghentikan Bot
+
+~~~bash
+tmux kill-session -t bot
+~~~
+
+### Cheat Sheet tmux
+
+- `Ctrl+B` + `D` = Detach (keluar tanpa matikan)
+- `tmux ls` = Lihat semua session
+- `tmux attach -t nama` = Masuk ke session
+- `tmux kill-session -t nama` = Hentikan session
+
+## Troubleshooting
+
+### Bot tidak merespons
+
+- Pastikan token benar (cek di BotFather)
+- Pastikan bot sudah dijadikan admin di grup (jika dipakai di grup)
+- Cek log error di terminal
+
+### Error "ModuleNotFoundError"
+
+Artinya library belum terinstall. Jalankan:
+
+~~~bash
+pip install python-telegram-bot
+~~~
+
+### Bot mati setelah minimize Termux
+
+Gunakan tmux seperti yang dijelaskan di atas.
+
+### Error "Conflict: terminated by other getUpdates request"
+
+Artinya ada 2 instance bot yang berjalan dengan token yang sama. Matikan semua bot lalu jalankan ulang.
+
+### Token bocor
+
+Segera revoke token lama dari BotFather (`/mybots` > pilih bot > API Token > Revoke), lalu buat token baru.
+
+## Ide Fitur Lanjutan
+
+Setelah menguasai dasar-dasar, kamu bisa mengembangkan bot dengan fitur:
+
+- **Inline Keyboard** - Tombol interaktif di bawah pesan
+- **Callback Query** - Menangani klik tombol
+- **Media** - Mengirim foto, video, dokumen
+- **Group Management** - Auto-moderator, welcome message
+- **Database** - Menyimpan data user dengan SQLite
+- **Scheduled Tasks** - Mengirim pesan otomatis dengan `JobQueue`
+- **Webhook** - Alternatif polling untuk production
+
+Resources untuk belajar lebih lanjut:
+- Dokumentasi resmi: python-telegram-bot.readthedocs.io
+- Telegram Bot API: core.telegram.org/bots/api
+- Contoh bot: github.com/python-telegram-bot/python-telegram-bot/tree/master/examples`,
+        category: 'Teknologi',
+        tags: ['telegram', 'bot', 'termux', 'python', 'tutorial', 'android'],
+        date: '2026-08-17',
+        views: 0
     }
 ];
 
